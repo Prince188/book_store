@@ -74,7 +74,7 @@ const Cart = () => {
                 <div className="flex-1 min-w-0">
                   <Link to={`/books/${item.book._id}`} className="font-semibold text-gray-900 hover:text-indigo-600 transition-colors line-clamp-1">{item.book.title}</Link>
                   <p className="text-sm text-gray-500 mt-0.5">{item.book.author}</p>
-                  <p className="text-sm font-semibold text-gray-900 mt-1">${item.book.price.toFixed(2)}</p>
+                  <p className="text-sm font-semibold text-gray-900 mt-1">₹{item.book.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <button onClick={() => updateItem(item.book._id, Math.max(1, item.quantity - 1))} disabled={item.quantity <= 1}
@@ -83,7 +83,7 @@ const Cart = () => {
                   <button onClick={() => updateItem(item.book._id, item.quantity + 1)} disabled={item.quantity >= item.book.quantity}
                     className="w-8 h-8 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-30 transition-colors">+</button>
                 </div>
-                <p className="font-bold text-gray-900 w-24 text-right">${(item.book.price * item.quantity).toFixed(2)}</p>
+                <p className="font-bold text-gray-900 w-24 text-right">₹{(item.book.price * item.quantity).toFixed(2)}</p>
                 <button onClick={() => removeItem(item.book._id)} className="text-gray-400 hover:text-red-500 transition-colors p-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
@@ -95,14 +95,14 @@ const Cart = () => {
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm sticky top-24">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Order summary</h2>
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>${total.toFixed(2)}</span></div>
-                <div className="flex justify-between text-gray-600"><span>Shipping</span><span>{shipping === 0 ? <span className="text-emerald-600 font-medium">Free</span> : `$${shipping.toFixed(2)}`}</span></div>
+                <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{total.toFixed(2)}</span></div>
+                <div className="flex justify-between text-gray-600"><span>Shipping</span><span>{shipping === 0 ? <span className="text-emerald-600 font-medium">Free</span> : `₹${shipping.toFixed(2)}`}</span></div>
                 {shipping === 0 && (
                   <div className="bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-2 rounded-lg">Free shipping applied!</div>
                 )}
                 <div className="border-t border-gray-100 pt-3 flex justify-between font-bold text-gray-900 text-lg">
                   <span>Total</span>
-                  <span>${grandTotal.toFixed(2)}</span>
+                  <span>₹{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
               <button onClick={handleCheckout} disabled={isCheckingOut}

@@ -87,7 +87,7 @@ const OrderDetail = () => {
                   <p className="text-xs text-gray-400">{item.book?.author}</p>
                   <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                 </div>
-                <p className="font-medium text-gray-900 text-sm">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="font-medium text-gray-900 text-sm">₹{(item.price * item.quantity).toFixed(2)}</p>
               </div>
             ))}
           </div>
@@ -95,7 +95,7 @@ const OrderDetail = () => {
           <div className="border-t border-gray-100 mt-6 pt-4 space-y-2">
             <div className="flex justify-between text-sm text-gray-600">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>₹{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm text-gray-600">
               <span>Shipping</span>
@@ -103,7 +103,7 @@ const OrderDetail = () => {
             </div>
             <div className="flex justify-between font-bold text-gray-900 text-lg pt-2 border-t border-gray-50">
               <span>Total</span>
-              <span>${order.totalAmount.toFixed(2)}</span>
+              <span>₹{order.totalAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>

@@ -68,7 +68,7 @@ const Favorites = () => {
                   </div>
                   <h3 className="font-semibold text-gray-900 line-clamp-2">{book.title}</h3>
                   <p className="text-sm text-gray-500 mt-0.5">{book.author}</p>
-                  <p className="font-bold text-gray-900 mt-1">${book.price.toFixed(2)}</p>
+                  <p className="font-bold text-gray-900 mt-1">₹{book.price.toFixed(2)}</p>
                 </Link>
                 <button onClick={() => toggle(book._id)}
                   className="mt-2 text-sm text-red-500 hover:text-red-600 font-medium transition-colors">

@@ -172,7 +172,7 @@ const Home = () => {
               </div>
               <h3 className="text-lg font-semibold text-[#1C1917] mb-2">Fast delivery</h3>
               <p className="text-[#78716C] text-sm leading-relaxed">
-                Free shipping on orders over $50. Track your package every step of the way.
+                Free shipping on orders over ₹50. Track your package every step of the way.
               </p>
             </div>
 

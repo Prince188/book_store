@@ -199,14 +199,14 @@ const downloadInvoice = async (req, res) => {
     for (const item of order.items) {
       doc.text(item.book?.title || 'Book', 50, y, { width: 250 });
       doc.text(item.quantity.toString(), 300, y, { width: 50, align: 'center' });
-      doc.text(`$${item.price.toFixed(2)}`, 350, y, { width: 80, align: 'right' });
-      doc.text(`$${(item.price * item.quantity).toFixed(2)}`, 450, y, { width: 80, align: 'right' });
+      doc.text(`₹${item.price.toFixed(2)}`, 350, y, { width: 80, align: 'right' });
+      doc.text(`₹${(item.price * item.quantity).toFixed(2)}`, 450, y, { width: 80, align: 'right' });
       y += 20;
     }
 
     doc.moveDown(1);
     doc.fontSize(12).font('Helvetica-Bold').fillColor('#333');
-    doc.text(`Total: $${order.totalAmount.toFixed(2)}`, { align: 'right' });
+    doc.text(`Total: ₹${order.totalAmount.toFixed(2)}`, { align: 'right' });
 
     doc.fontSize(9).font('Helvetica').fillColor('#999');
     doc.text('Thank you for your purchase!', 50, doc.page.height - 50, { align: 'center' });

@@ -60,8 +60,16 @@ const ManageBooks = () => {
     setForm((prev) => ({ ...prev, categories: prev.categories.filter((id) => id !== catId) }));
   };
 
+  const LIMITS = { title: 100, author: 80, publisher: 80, description: 500 };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    for (const field of ['title', 'author', 'publisher', 'description']) {
+      if (form[field].length > LIMITS[field]) {
+        alert(`${field.charAt(0).toUpperCase() + field.slice(1)} exceeds ${LIMITS[field]} characters`);
+        return;
+      }
+    }
     const fd = new FormData();
     Object.entries(form).forEach(([k, v]) => {
       if (k === 'categories') return;
@@ -106,11 +114,11 @@ const ManageBooks = () => {
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-6 mb-8 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label className="block text-sm font-medium text-gray-700 mb-1">Title *</label><input name="title" value={form.title} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-1">Author *</label><input name="author" value={form.author} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-1">Publisher</label><input name="publisher" value={form.publisher} onChange={handleChange} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-1">Price *</label><input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
-            <div><label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label><input name="quantity" type="number" value={form.quantity} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
+            <div><label className="block text-sm font-medium text-gray-700 mb-1">Title *</label><input name="title" maxLength={100} value={form.title} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /><span className="text-xs text-gray-400 mt-0.5 block text-right">{form.title.length}/100</span></div>
+            <div><label className="block text-sm font-medium text-gray-700 mb-1">Author *</label><input name="author" maxLength={80} value={form.author} onChange={handleChange} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /><span className="text-xs text-gray-400 mt-0.5 block text-right">{form.author.length}/80</span></div>
+            <div><label className="block text-sm font-medium text-gray-700 mb-1">Publisher</label><input name="publisher" maxLength={80} value={form.publisher} onChange={handleChange} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /><span className="text-xs text-gray-400 mt-0.5 block text-right">{form.publisher.length}/80</span></div>
+            <div><label className="block text-sm font-medium text-gray-700 mb-1">Price (₹) *</label><input name="price" type="text" inputMode="decimal" value={form.price} onChange={(e) => { const v = e.target.value; if (/^\d*\.?\d{0,2}$/.test(v)) handleChange(e); }} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
+            <div><label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label><input name="quantity" type="text" inputMode="numeric" value={form.quantity} onChange={(e) => { const v = e.target.value; if (/^\d*$/.test(v)) handleChange(e); }} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
             <div ref={dropdownRef} className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">Categories</label>
               {form.categories.length > 0 && (
@@ -143,7 +151,7 @@ const ManageBooks = () => {
               )}
             </div>
           </div>
-          <div><label className="block text-sm font-medium text-gray-700 mb-1">Description</label><textarea name="description" value={form.description} onChange={handleChange} rows="3" className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /></div>
+          <div><label className="block text-sm font-medium text-gray-700 mb-1">Description</label><textarea name="description" maxLength={500} value={form.description} onChange={handleChange} rows="3" className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" /><span className="text-xs text-gray-400 mt-0.5 block text-right">{form.description.length}/500</span></div>
           <div><label className="block text-sm font-medium text-gray-700 mb-1">Image</label><input type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} className="text-sm text-gray-500" /></div>
           <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-all">{editing ? 'Update' : 'Add'}</button>
         </form>
@@ -167,7 +175,7 @@ const ManageBooks = () => {
                 <td className="p-4"><div className="flex items-center gap-3"><img src={book.image || 'https://via.placeholder.com/40x60'} alt="" className="w-8 h-12 object-cover rounded" /><span className="font-medium text-gray-900 text-sm">{book.title}</span></div></td>
                 <td className="p-4 text-sm text-gray-600">{book.author}</td>
                 <td className="p-4 text-sm text-gray-600">{(book.categories || []).map((c) => c?.name).join(', ') || '-'}</td>
-                <td className="p-4 text-sm font-medium text-gray-900 text-right">${book.price}</td>
+                <td className="p-4 text-sm font-medium text-gray-900 text-right">₹{Number(book.price).toFixed(2)}</td>
                 <td className="p-4 text-sm text-right"><span className={book.quantity > 0 ? 'text-emerald-600 font-medium' : 'text-red-500'}>{book.quantity}</span></td>
                 <td className="p-4 text-right space-x-3">
                   <button onClick={() => handleEdit(book)} className="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition-colors">Edit</button>

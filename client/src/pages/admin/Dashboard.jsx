@@ -42,11 +42,11 @@ const Dashboard = () => {
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm font-medium text-gray-500 mb-1">Revenue</p>
-          <p className="text-3xl font-bold text-gray-900">${stats.revenue.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-gray-900">₹{stats.revenue.toFixed(2)}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-5">
           <p className="text-sm font-medium text-gray-500 mb-1">Total lifetime revenue</p>
-          <p className="text-3xl font-bold text-gray-900">${(sales?.totalRevenue || 0).toFixed(2)}</p>
+          <p className="text-3xl font-bold text-gray-900">₹{(sales?.totalRevenue || 0).toFixed(2)}</p>
         </div>
       </div>
 
@@ -93,7 +93,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex gap-6 text-sm">
                   <span className="text-gray-500">{b.sold} sold</span>
-                  <span className="font-medium text-gray-900">${(b.revenue || 0).toFixed(2)}</span>
+                  <span className="font-medium text-gray-900">₹{(b.revenue || 0).toFixed(2)}</span>
                 </div>
               </div>
             ))}

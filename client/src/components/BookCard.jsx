@@ -57,7 +57,7 @@ const BookCard = ({ book }) => {
             </span>
           )}
           <div className="flex items-center justify-between pt-2 border-t border-gray-50">
-            <span className="font-bold text-lg text-gray-900">${book.price.toFixed(2)}</span>
+            <span className="font-bold text-lg text-gray-900">₹{book.price.toFixed(2)}</span>
             <button
               onClick={handleAddToCart}
               disabled={book.quantity === 0}

@@ -84,7 +84,7 @@ const BookDetail = () => {
             {book.publisher && <p className="text-sm text-gray-400">{book.publisher}</p>}
 
             <div className="border-t border-gray-100 pt-6">
-              <p className="text-4xl font-bold text-gray-900">${book.price.toFixed(2)}</p>
+              <p className="text-4xl font-bold text-gray-900">₹{book.price.toFixed(2)}</p>
               <p className={`text-sm mt-2 font-medium ${book.quantity > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                 {book.quantity > 0 ? `In stock — ${book.quantity} available` : 'Currently out of stock'}
               </p>

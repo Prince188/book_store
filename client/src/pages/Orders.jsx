@@ -58,13 +58,13 @@ const Orders = () => {
                   {order.items.map((item) => (
                     <div key={item._id} className="flex justify-between text-sm">
                       <span className="text-gray-600">{item.book?.title || 'Book'} <span className="text-gray-400">x{item.quantity}</span></span>
-                      <span className="font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-medium text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
                 <div className="border-t border-gray-100 mt-3 pt-3 flex justify-between font-bold text-gray-900">
                   <span>Total</span>
-                  <span>${order.totalAmount.toFixed(2)}</span>
+                  <span>₹{order.totalAmount.toFixed(2)}</span>
                 </div>
               </Link>
             ))}
