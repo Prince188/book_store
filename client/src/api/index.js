@@ -38,3 +38,26 @@ export const getOrders = () => API.get('/orders');
 export const getOrder = (id) => API.get(`/orders/${id}`);
 export const getAllOrders = () => API.get('/orders/all');
 export const updateOrderStatus = (id, data) => API.put(`/orders/${id}/status`, data);
+export const getSalesStats = () => API.get('/orders/stats/sales');
+export const downloadInvoice = (id) => API.get(`/orders/${id}/invoice`, { responseType: 'blob' });
+
+export const getBookReviews = (bookId) => API.get(`/reviews/${bookId}`);
+export const getMyReview = (bookId) => API.get(`/reviews/${bookId}/mine`);
+export const createReview = (bookId, data) => API.post(`/reviews/${bookId}`, data);
+export const updateReview = (id, data) => API.put(`/reviews/${id}`, data);
+export const deleteReview = (id) => API.delete(`/reviews/${id}`);
+
+export const createStockAlert = (bookId) => API.post(`/stock-alerts/${bookId}`);
+export const getMyStockAlerts = () => API.get('/stock-alerts');
+export const deleteStockAlert = (bookId) => API.delete(`/stock-alerts/${bookId}`);
+
+export const createTicket = (data) => API.post('/tickets', data);
+export const getMyTickets = () => API.get('/tickets');
+export const getTicket = (id) => API.get(`/tickets/${id}`);
+export const getAllTickets = () => API.get('/tickets/all');
+export const replyTicket = (id, data) => API.post(`/tickets/${id}/reply`, data);
+export const updateTicketStatus = (id, data) => API.put(`/tickets/${id}/status`, data);
+
+export const getAllUsers = () => API.get('/auth/users');
+export const updateUserRole = (id, data) => API.put(`/auth/users/${id}`, data);
+export const deleteUser = (id) => API.delete(`/auth/users/${id}`);

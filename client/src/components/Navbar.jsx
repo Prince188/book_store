@@ -45,6 +45,12 @@ const Navbar = () => {
               >
                 Favorites
               </Link>
+              <Link
+                to="/contact"
+                className="text-[#57534E] hover:text-[#8B5CF6] transition-colors duration-200 font-medium"
+              >
+                Contact
+              </Link>
               {user && (
                 <Link
                   to="/orders"
@@ -86,12 +92,12 @@ const Navbar = () => {
                       >
                         Profile
                       </Link>
-                      <Link
-                        to="/settings"
-                        className="block px-4 py-2 text-sm text-[#57534E] hover:bg-[#FAFAF9] hover:text-[#8B5CF6] transition-colors"
-                      >
-                        Settings
-                      </Link>
+                      {user?.role === 'admin' && (
+                        <>
+                          <Link to="/admin/users" className="block px-4 py-2 text-sm text-[#57534E] hover:bg-[#FAFAF9] hover:text-[#8B5CF6] transition-colors">Users</Link>
+                          <Link to="/admin/tickets" className="block px-4 py-2 text-sm text-[#57534E] hover:bg-[#FAFAF9] hover:text-[#8B5CF6] transition-colors">Tickets</Link>
+                        </>
+                      )}
                       <hr className="my-1 border-[#E7E5E4]" />
                       <button
                         onClick={handleLogout}
@@ -165,6 +171,13 @@ const Navbar = () => {
               >
                 Favorites
               </Link>
+              <Link
+                to="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2"
+              >
+                Contact
+              </Link>
               {user && (
                 <Link
                   to="/orders"
@@ -175,13 +188,14 @@ const Navbar = () => {
                 </Link>
               )}
               {user?.role === 'admin' && (
-                <Link
-                  to="/admin"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-[#8B5CF6] hover:text-[#7C3AED] transition-colors font-medium py-2"
-                >
-                  Admin Panel
-                </Link>
+                <>
+                  <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#8B5CF6] hover:text-[#7C3AED] transition-colors font-medium py-2">Dashboard</Link>
+                  <Link to="/admin/books" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2 pl-4 text-sm">Books</Link>
+                  <Link to="/admin/categories" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2 pl-4 text-sm">Categories</Link>
+                  <Link to="/admin/orders" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2 pl-4 text-sm">Orders</Link>
+                  <Link to="/admin/users" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2 pl-4 text-sm">Users</Link>
+                  <Link to="/admin/tickets" onClick={() => setIsMobileMenuOpen(false)} className="block text-[#57534E] hover:text-[#8B5CF6] transition-colors font-medium py-2 pl-4 text-sm">Tickets</Link>
+                </>
               )}
             </div>
 

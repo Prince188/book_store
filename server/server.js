@@ -18,6 +18,9 @@ app.use('/api/categories', require('./routes/categories'));
 app.use('/api/cart', require('./routes/cart'));
 app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/orders', require('./routes/orders'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/stock-alerts', require('./routes/stockAlerts'));
+app.use('/api/tickets', require('./routes/tickets'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Book Store API is running' });
