@@ -5,7 +5,7 @@ import { getBookReviews, getMyReview, createReview, updateReview, deleteReview }
 
 const Star = ({ filled, onClick }) => (
   <button type="button" onClick={onClick}
-    className={`text-xl transition-colors ${filled ? 'text-[#9C8B73]' : 'text-[#D9D3C7] hover:text-[#C9B79C]'}`}>
+    className={`text-lg transition-colors ${filled ? 'text-amber-400' : 'text-gray-200 hover:text-amber-300'}`}>
     ★
   </button>
 );
@@ -78,65 +78,65 @@ const ReviewSection = ({ bookId, refreshKey }) => {
   };
 
   return (
-    <div className="bg-white border border-[#EBE6DC] p-8">
+    <div className="bg-white border border-gray-200 rounded-lg p-8">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-[#2A2724]">
-          Reviews {total > 0 && <span className="text-[#A8A096] font-normal">({total})</span>}
+        <h2 className="text-lg font-semibold text-gray-900">
+          Reviews {total > 0 && <span className="text-gray-400 font-normal">({total})</span>}
         </h2>
         {total > 0 && (
           <div className="flex items-center gap-2">
-            <div className="flex text-[#9C8B73] text-sm">{Array.from({ length: 5 }, (_, i) => <Star key={i} filled={i < Math.round(avg)} />)}</div>
-            <span className="text-sm text-[#2A2724]">{avg.toFixed(1)}</span>
+            <div className="flex text-amber-400 text-sm">{Array.from({ length: 5 }, (_, i) => <Star key={i} filled={i < Math.round(avg)} />)}</div>
+            <span className="text-sm font-medium text-gray-700">{avg.toFixed(1)}</span>
           </div>
         )}
       </div>
 
       {loading ? (
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => <div key={i} className="h-20 bg-[#EBE6DC] rounded-xl animate-pulse" />)}
+          {[1, 2, 3].map((i) => <div key={i} className="h-20 bg-gray-100 rounded-lg animate-pulse" />)}
         </div>
       ) : reviews.length === 0 ? (
-        <p className="text-[#A8A096] text-sm text-center py-8">No reviews yet.</p>
+        <p className="text-gray-400 text-sm text-center py-8">No reviews yet.</p>
       ) : (
         <div className="space-y-4 mb-8">
           {reviews.map((r) => (
-            <div key={r._id} className="bg-[#FBFAF7] p-4">
+            <div key={r._id} className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-7 h-7 bg-gradient-to-br from-[#9C8B73] to-[#C9B79C] rounded-full flex items-center justify-center text-white text-xs font-bold">{r.user?.name?.charAt(0) || 'U'}</div>
-                <span className="text-sm text-[#2A2724]">{r.user?.name || 'Anonymous'}</span>
-                <div className="flex text-[#9C8B73] text-sm ml-1">{Array.from({ length: 5 }, (_, i) => <Star key={i} filled={i < r.rating} />)}</div>
+                <div className="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 text-xs font-bold">{r.user?.name?.charAt(0) || 'U'}</div>
+                <span className="text-sm font-medium text-gray-900">{r.user?.name || 'Anonymous'}</span>
+                <div className="flex text-amber-400 text-sm ml-1">{Array.from({ length: 5 }, (_, i) => <Star key={i} filled={i < r.rating} />)}</div>
               </div>
-              {r.comment && <p className="text-sm text-[#6B655D] mt-1 ml-9">{r.comment}</p>}
+              {r.comment && <p className="text-sm text-gray-600 mt-1 ml-9">{r.comment}</p>}
             </div>
           ))}
         </div>
       )}
 
       {user && (
-        <div className="border-t border-[#EBE6DC] pt-6">
+        <div className="border-t border-gray-200 pt-6">
           {!editing && (
             <button onClick={startEdit}
-              className="px-5 py-2.5 bg-[#2A2724] text-white text-sm hover:bg-[#6B655D] transition-all">
+              className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all">
               {myReview ? 'Edit your review' : 'Write a review'}
             </button>
           )}
           {editing && (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <p className="text-sm text-[#6B655D] mb-2">Rating</p>
+                <p className="text-sm font-medium text-gray-700 mb-2">Rating</p>
                 <div className="flex gap-1">{Array.from({ length: 5 }, (_, i) => <Star key={i} filled={i < rating} onClick={() => setRating(i + 1)} />)}</div>
               </div>
               <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Write your review (optional)" rows="3"
-                className="w-full px-4 py-2.5 bg-[#FBFAF7] border border-[#D9D3C7] text-sm focus:outline-none focus:border-[#9C8B73]" />
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               <div className="flex gap-3">
-                <button type="submit" className="px-5 py-2.5 bg-[#2A2724] text-white text-sm hover:bg-[#6B655D] transition-all">
+                <button type="submit" className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all">
                   {myReview ? 'Update' : 'Submit'}
                 </button>
                 <button type="button" onClick={() => setEditing(false)}
-                  className="px-5 py-2.5 border border-[#D9D3C7] text-[#6B655D] text-sm hover:bg-[#EBE6DC]/30 transition-all">Cancel</button>
+                  className="px-5 py-2.5 border border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-50 transition-all">Cancel</button>
                 {myReview && (
                   <button type="button" onClick={handleDelete}
-                    className="px-5 py-2.5 text-red-500 text-sm hover:bg-red-50 transition-all">Delete</button>
+                    className="px-5 py-2.5 text-red-500 rounded-lg text-sm font-semibold hover:bg-red-50 transition-all">Delete</button>
                 )}
               </div>
             </form>

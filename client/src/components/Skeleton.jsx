@@ -1,9 +1,9 @@
 const Skeleton = ({ className = '' }) => (
-  <div className={`bg-[#EBE6DC] rounded-xl animate-pulse ${className}`} />
+  <div className={`bg-gray-100 rounded-lg animate-pulse ${className}`} />
 );
 
 export const BookCardSkeleton = () => (
-  <div className="bg-white rounded-2xl border border-[#EBE6DC] overflow-hidden">
+  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
     <Skeleton className="aspect-[3/4] rounded-none" />
     <div className="p-4 space-y-3">
       <Skeleton className="h-4 w-3/4" />
@@ -16,7 +16,7 @@ export const BookCardSkeleton = () => (
 export const BookDetailSkeleton = () => (
   <div className="max-w-7xl mx-auto px-6 py-12">
     <div className="grid md:grid-cols-2 gap-12">
-      <Skeleton className="aspect-[3/4] rounded-3xl" />
+      <Skeleton className="aspect-[3/4] rounded-lg" />
       <div className="space-y-4">
         <Skeleton className="h-6 w-20" />
         <Skeleton className="h-10 w-3/4" />
@@ -30,7 +30,7 @@ export const BookDetailSkeleton = () => (
 );
 
 export const StatsCardSkeleton = () => (
-  <div className="bg-white rounded-2xl border border-[#EBE6DC] p-6 space-y-3">
+  <div className="bg-white border border-gray-200 rounded-lg p-6 space-y-3">
     <Skeleton className="h-4 w-24" />
     <Skeleton className="h-10 w-20" />
   </div>

@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #FBFAF7;
-  color: #2A2724;
+  background-color: #F8FAFC;
+  color: #0F172A;
 }
 
 .line-clamp-2 {

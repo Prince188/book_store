@@ -18,10 +18,10 @@ export const ToastProvider = ({ children }) => {
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto px-5 py-3 shadow-lg text-sm transition-all animate-slideUp ${
-              t.type === 'success' ? 'bg-[#2A2724] text-white' :
+            className={`pointer-events-auto px-5 py-3 rounded-lg shadow-lg text-sm font-medium transition-all animate-slideUp ${
+              t.type === 'success' ? 'bg-gray-900 text-white' :
               t.type === 'error' ? 'bg-red-600 text-white' :
-              'bg-[#2A2724] text-white'
+              'bg-gray-900 text-white'
             }`}
           >
             {t.message}

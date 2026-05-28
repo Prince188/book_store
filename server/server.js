@@ -22,6 +22,7 @@ app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/stock-alerts', require('./routes/stockAlerts'));
 app.use('/api/tickets', require('./routes/tickets'));
 app.use('/api/coupons', require('./routes/coupons'));
+app.use('/api/upload', require('./routes/upload'));
 
 app.get('/', (req, res) => {
   res.json({ message: 'Book Store API is running' });

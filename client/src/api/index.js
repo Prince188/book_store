@@ -23,6 +23,7 @@ export const deleteBook = (id) => API.delete(`/books/${id}`);
 
 export const getCategories = () => API.get('/categories');
 export const createCategory = (data) => API.post('/categories', data);
+export const updateCategory = (id, data) => API.put(`/categories/${id}`, data);
 export const deleteCategory = (id) => API.delete(`/categories/${id}`);
 
 export const getCart = () => API.get('/cart');
@@ -50,6 +51,12 @@ export const deleteReview = (id) => API.delete(`/reviews/${id}`);
 export const createStockAlert = (bookId) => API.post(`/stock-alerts/${bookId}`);
 export const getMyStockAlerts = () => API.get('/stock-alerts');
 export const deleteStockAlert = (bookId) => API.delete(`/stock-alerts/${bookId}`);
+
+export const uploadImage = (file) => {
+  const fd = new FormData();
+  fd.append('image', file);
+  return API.post('/upload', fd);
+};
 
 export const createTicket = (data) => API.post('/tickets', data);
 export const getMyTickets = () => API.get('/tickets');
