@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getOrders } from '../api';
+import Seo from '../components/Seo';
 
 const Orders = () => {
   const { user } = useContext(AuthContext);
@@ -23,6 +24,7 @@ const Orders = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Seo title="My Orders" />
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-6 py-12">
           <h1 className="text-3xl font-bold text-gray-900">Orders</h1>

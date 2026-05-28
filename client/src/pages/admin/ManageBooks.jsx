@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { getBooks, createBook, updateBook, deleteBook, getCategories, createCategory } from '../../api';
+import Seo from '../../components/Seo';
 
 const emptyForm = { title: '', author: '', publisher: '', price: '', quantity: '', categories: [], description: '' };
 
@@ -104,7 +105,8 @@ const ManageBooks = () => {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Books</h1>
+        <Seo title="Admin — Books" />
+      <h1 className="text-2xl font-bold text-gray-900">Books</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm(emptyForm); setSearchTerm(''); }}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-all">
           {showForm ? 'Cancel' : '+ Add book'}

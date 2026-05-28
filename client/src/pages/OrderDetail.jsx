@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getOrder, downloadInvoice } from '../api';
+import Seo from '../components/Seo';
 
 const OrderDetail = () => {
   const { id } = useParams();
@@ -60,6 +61,7 @@ const OrderDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <Seo title={`Order #${order._id.slice(-8).toUpperCase()}`} />
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-6">
 
         <Link to="/orders" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-indigo-600 transition-colors">

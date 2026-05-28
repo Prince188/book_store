@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import Seo from '../components/Seo';
 import { getBooks, getCategories } from '../api';
 import BookCard from '../components/BookCard';
 
@@ -73,7 +74,8 @@ const AllBooks = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9]">
+      <div className="min-h-screen bg-[#FAFAF9]">
+      <Seo title="All Books" description="Explore our complete collection of books." />
       {/* Header Section */}
       <div className="bg-white border-b border-[#E7E5E4]">
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">

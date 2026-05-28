@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { getAllUsers, updateUserRole, deleteUser } from '../../api';
 import { ToastContext } from '../../context/ToastContext';
+import Seo from '../../components/Seo';
 
 const ManageUsers = () => {
   const { addToast } = useContext(ToastContext);
@@ -21,6 +22,7 @@ const ManageUsers = () => {
 
   return (
     <div className="p-8">
+      <Seo title="Admin — Users" />
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Users</h1>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">

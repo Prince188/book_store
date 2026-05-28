@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 import { createOrder, validateCoupon } from '../api';
+import Seo from '../components/Seo';
 
 const Cart = () => {
   const { user } = useContext(AuthContext);
@@ -85,6 +86,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Seo title="Shopping Cart" />
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-12">
           <h1 className="text-3xl font-bold text-gray-900">Cart</h1>

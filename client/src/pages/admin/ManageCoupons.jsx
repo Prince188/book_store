@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCoupons, createCoupon, updateCoupon, deleteCoupon } from '../../api';
+import Seo from '../../components/Seo';
 
 const emptyForm = { code: '', discountType: 'percentage', discountValue: '', minOrderAmount: '', maxDiscount: '', expiresAt: '', usageLimit: '', maxUsePerUser: '1' };
 
@@ -49,7 +50,8 @@ const ManageCoupons = () => {
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Coupons</h1>
+        <Seo title="Admin — Coupons" />
+      <h1 className="text-2xl font-bold text-gray-900">Coupons</h1>
         <button onClick={() => { setShowForm(!showForm); setEditing(null); setForm(emptyForm); }}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-all">
           {showForm ? 'Cancel' : '+ Add coupon'}

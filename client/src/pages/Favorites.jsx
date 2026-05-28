@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { FavoriteContext } from '../context/FavoriteContext';
 import { getBook } from '../api';
+import Seo from '../components/Seo';
 
 const PLACEHOLDER = 'https://via.placeholder.com/400x600?text=No+Cover';
 
@@ -41,6 +42,7 @@ const Favorites = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Seo title="Saved Books" />
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <h1 className="text-3xl font-bold text-gray-900">Saved books</h1>

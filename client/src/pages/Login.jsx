@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Seo from '../components/Seo';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,6 +18,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center py-16">
+      <Seo title="Sign In" />
       <div className="w-full max-w-sm mx-auto px-6">
         <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-sm">
           <div className="text-center mb-8">

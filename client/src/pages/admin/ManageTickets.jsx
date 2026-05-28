@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllTickets, updateTicketStatus } from '../../api';
+import Seo from '../../components/Seo';
 
 const ManageTickets = () => {
   const [tickets, setTickets] = useState([]);
@@ -23,6 +24,7 @@ const ManageTickets = () => {
 
   return (
     <div className="p-8">
+      <Seo title="Admin — Tickets" />
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Support Tickets</h1>
 
       {tickets.length === 0 ? (

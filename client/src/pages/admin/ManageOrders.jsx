@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getAllOrders, updateOrderStatus } from '../../api';
 
+
 const statuses = ['pending', 'shipped', 'delivered', 'cancelled'];
 
 const ManageOrders = () => {
@@ -25,6 +26,7 @@ const ManageOrders = () => {
 
   return (
     <div className="p-8">
+      <Seo title="Admin — Orders" />
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Orders</h1>
 
       {orders.length === 0 ? (

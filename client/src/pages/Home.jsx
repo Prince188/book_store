@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getBooks, getCategories } from '../api';
 import BookCard from '../components/BookCard';
+import Seo from '../components/Seo';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Home = () => {
 
   return (
     <div className="bg-[#FAFAF9] min-h-screen">
+      <Seo description="Browse our collection of books across all genres. Find your next great read at Bookstore." />
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 pt-20 pb-16 md:pt-28 md:pb-24">
         {/* Abstract background shapes */}

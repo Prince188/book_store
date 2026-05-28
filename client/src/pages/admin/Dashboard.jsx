@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getBooks, getAllOrders, getSalesStats } from '../../api';
+import Seo from '../../components/Seo';
 import { StatsCardSkeleton } from '../../components/Skeleton';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
@@ -29,6 +30,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-8">
+      <Seo title="Admin — Dashboard" />
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

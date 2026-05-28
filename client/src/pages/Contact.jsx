@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { createTicket } from '../api';
 import { ToastContext } from '../context/ToastContext';
+import Seo from '../components/Seo';
 
 const Contact = () => {
   const { addToast } = useContext(ToastContext);
@@ -25,6 +26,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <Seo title="Contact Us" description="Get in touch with our support team. We're here to help." />
       <div className="max-w-2xl mx-auto px-6 py-16">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Contact Us</h1>

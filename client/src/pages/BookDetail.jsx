@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Seo from '../components/Seo';
 import { getBook, getBooks, createStockAlert } from '../api';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
@@ -56,7 +57,8 @@ const BookDetail = () => {
 
   if (!book) return <BookDetailSkeleton />;
 
-  return (
+  return (<>
+    <Seo title={book.title} description={`Buy ${book.title} by ${book.author} at Bookstore.`} />
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto px-6 py-12 space-y-12">
         <Link to="/books" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-indigo-600 transition-colors">
@@ -145,6 +147,7 @@ const BookDetail = () => {
         <ReviewSection bookId={id} />
       </div>
     </div>
+    </>
   );
 };
 

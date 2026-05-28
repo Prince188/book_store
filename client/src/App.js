@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { FavoriteProvider } from './context/FavoriteContext';
@@ -37,6 +38,7 @@ const MainLayout = () => (
 
 function App() {
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
@@ -71,6 +73,7 @@ function App() {
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

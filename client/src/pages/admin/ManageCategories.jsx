@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getCategories, createCategory, deleteCategory } from '../../api';
+import Seo from '../../components/Seo';
 
 const ManageCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -20,6 +21,7 @@ const ManageCategories = () => {
 
   return (
     <div className="p-8">
+      <Seo title="Admin — Categories" />
       <h1 className="text-2xl font-bold text-gray-900 mb-8">Categories</h1>
 
       <form onSubmit={handleAdd} className="bg-white rounded-xl border border-gray-200 p-6 mb-8 flex gap-4 items-end">
