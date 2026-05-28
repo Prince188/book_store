@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Book = require('../models/Book');
+const Coupon = require('../models/Coupon');
 
 const createOrder = async (req, res) => {
   try {
@@ -17,19 +18,50 @@ const createOrder = async (req, res) => {
       }
     }
 
+    const subtotal = cart.items.reduce(
+      (sum, item) => sum + item.book.price * item.quantity, 0
+    );
+
+    let discount = 0;
+    let couponId = null;
+    const { couponCode } = req.body;
+
+    if (couponCode) {
+      const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+      if (!coupon) return res.status(400).json({ message: 'Invalid coupon code' });
+      if (!coupon.isActive) return res.status(400).json({ message: 'Coupon is no longer active' });
+      if (coupon.expiresAt < new Date()) return res.status(400).json({ message: 'Coupon has expired' });
+      if (subtotal < coupon.minOrderAmount) return res.status(400).json({ message: `Minimum order amount is ₹${coupon.minOrderAmount}` });
+      if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) return res.status(400).json({ message: 'Coupon usage limit reached' });
+      const userUsage = coupon.usedBy.filter((id) => id.toString() === req.user._id.toString()).length;
+      if (userUsage >= coupon.maxUsePerUser) return res.status(400).json({ message: 'You have already used this coupon' });
+
+      if (coupon.discountType === 'percentage') {
+        discount = (subtotal * coupon.discountValue) / 100;
+        if (coupon.maxDiscount) discount = Math.min(discount, coupon.maxDiscount);
+      } else {
+        discount = coupon.discountValue;
+      }
+      discount = Math.min(discount, subtotal);
+      discount = Math.round(discount * 100) / 100;
+      couponId = coupon._id;
+      await Coupon.findByIdAndUpdate(coupon._id, { $inc: { usedCount: 1 }, $push: { usedBy: req.user._id } });
+    }
+
+    const totalAmount = Math.round((subtotal - discount) * 100) / 100;
+
     const orderItems = cart.items.map((item) => ({
       book: item.book._id,
       quantity: item.quantity,
       price: item.book.price,
     }));
 
-    const totalAmount = cart.items.reduce(
-      (sum, item) => sum + item.book.price * item.quantity, 0
-    );
-
     const order = await Order.create({
       user: req.user._id,
       items: orderItems,
+      subtotal,
+      discount,
+      coupon: couponId,
       totalAmount,
     });
 
@@ -42,7 +74,9 @@ const createOrder = async (req, res) => {
     cart.items = [];
     await cart.save();
 
-    const populated = await Order.findById(order._id).populate('items.book');
+    const populated = await Order.findById(order._id)
+      .populate('items.book')
+      .populate('coupon', 'code discountType discountValue');
     res.status(201).json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -53,6 +87,7 @@ const getOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id })
       .populate('items.book')
+      .populate('coupon', 'code discountType discountValue')
       .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
@@ -65,6 +100,7 @@ const getAllOrders = async (req, res) => {
     const orders = await Order.find()
       .populate('user', 'name email')
       .populate('items.book')
+      .populate('coupon', 'code discountType discountValue')
       .sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
@@ -76,7 +112,8 @@ const getOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email phone address')
-      .populate('items.book');
+      .populate('items.book')
+      .populate('coupon', 'code discountType discountValue');
 
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
@@ -156,7 +193,8 @@ const downloadInvoice = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email phone address')
-      .populate('items.book');
+      .populate('items.book')
+      .populate('coupon', 'code discountType discountValue');
 
     if (!order) return res.status(404).json({ message: 'Order not found' });
     const isOwner = order.user && order.user._id.toString() === req.user._id.toString();
@@ -205,6 +243,15 @@ const downloadInvoice = async (req, res) => {
     }
 
     doc.moveDown(1);
+    doc.fontSize(10).font('Helvetica').fillColor('#555');
+    doc.text(`Subtotal: ₹${order.subtotal.toFixed(2)}`, { align: 'right' });
+
+    if (order.discount > 0) {
+      doc.fontSize(10).font('Helvetica').fillColor('#16a34a');
+      doc.text(`Discount (${order.coupon?.code || 'Coupon'}): -₹${order.discount.toFixed(2)}`, { align: 'right' });
+    }
+
+    doc.moveDown(0.5);
     doc.fontSize(12).font('Helvetica-Bold').fillColor('#333');
     doc.text(`Total: ₹${order.totalAmount.toFixed(2)}`, { align: 'right' });
 

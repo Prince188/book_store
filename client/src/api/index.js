@@ -33,7 +33,7 @@ export const removeFromCart = (bookId) => API.delete(`/cart/${bookId}`);
 export const getFavorites = () => API.get('/favorites');
 export const toggleFavorite = (bookId) => API.post(`/favorites/${bookId}`);
 
-export const createOrder = () => API.post('/orders');
+export const createOrder = (data) => API.post('/orders', data);
 export const getOrders = () => API.get('/orders');
 export const getOrder = (id) => API.get(`/orders/${id}`);
 export const getAllOrders = () => API.get('/orders/all');
@@ -61,3 +61,9 @@ export const updateTicketStatus = (id, data) => API.put(`/tickets/${id}/status`,
 export const getAllUsers = () => API.get('/auth/users');
 export const updateUserRole = (id, data) => API.put(`/auth/users/${id}`, data);
 export const deleteUser = (id) => API.delete(`/auth/users/${id}`);
+
+export const getCoupons = () => API.get('/coupons');
+export const createCoupon = (data) => API.post('/coupons', data);
+export const updateCoupon = (id, data) => API.put(`/coupons/${id}`, data);
+export const deleteCoupon = (id) => API.delete(`/coupons/${id}`);
+export const validateCoupon = (data) => API.post('/coupons/validate', data);

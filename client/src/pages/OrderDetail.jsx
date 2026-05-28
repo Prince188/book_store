@@ -95,8 +95,14 @@ const OrderDetail = () => {
           <div className="border-t border-gray-100 mt-6 pt-4 space-y-2">
             <div className="flex justify-between text-sm text-gray-600">
               <span>Subtotal</span>
-              <span>₹{subtotal.toFixed(2)}</span>
+              <span>₹{order.subtotal?.toFixed(2) || subtotal.toFixed(2)}</span>
             </div>
+            {order.discount > 0 && (
+              <div className="flex justify-between text-sm text-emerald-600">
+                <span>Discount {order.coupon && <span className="text-xs">({order.coupon.code})</span>}</span>
+                <span>-₹{order.discount.toFixed(2)}</span>
+              </div>
+            )}
             <div className="flex justify-between text-sm text-gray-600">
               <span>Shipping</span>
               <span className="text-emerald-600">Free</span>

@@ -62,7 +62,13 @@ const Orders = () => {
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-gray-100 mt-3 pt-3 flex justify-between font-bold text-gray-900">
+                {order.discount > 0 && (
+                  <div className="flex justify-between text-xs text-emerald-600 pt-1">
+                    <span>Discount {order.coupon && <span>({order.coupon.code})</span>}</span>
+                    <span>-₹{order.discount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="border-t border-gray-100 mt-2 pt-2 flex justify-between font-bold text-gray-900">
                   <span>Total</span>
                   <span>₹{order.totalAmount.toFixed(2)}</span>
                 </div>

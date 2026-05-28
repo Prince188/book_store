@@ -145,7 +145,7 @@ const Profile = () => {
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <p className="text-xs text-gray-500">{order.items.length} item{order.items.length !== 1 ? 's' : ''}</p>
+                    <p className="text-xs text-gray-500">{order.items.length} item{order.items.length !== 1 ? 's' : ''}{order.discount > 0 && ' • Discount applied'}</p>
                     <p className="font-bold text-gray-900 text-sm">₹{order.totalAmount.toFixed(2)}</p>
                   </div>
                 </Link>

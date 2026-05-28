@@ -25,6 +25,7 @@ import ManageCategories from './pages/admin/ManageCategories';
 import ManageOrders from './pages/admin/ManageOrders';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageTickets from './pages/admin/ManageTickets';
+import ManageCoupons from './pages/admin/ManageCoupons';
 
 const MainLayout = () => (
   <div className="flex flex-col min-h-screen">
@@ -61,6 +62,7 @@ function App() {
                   <Route path="categories" element={<ManageCategories />} />
                   <Route path="orders" element={<ManageOrders />} />
                   <Route path="users" element={<ManageUsers />} />
+                  <Route path="coupons" element={<ManageCoupons />} />
                   <Route path="tickets" element={<ManageTickets />} />
                 </Route>
               </Routes>

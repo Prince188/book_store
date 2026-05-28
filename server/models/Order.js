@@ -10,6 +10,9 @@ const orderSchema = new mongoose.Schema(
         price: { type: Number, required: true },
       },
     ],
+    subtotal: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
+    coupon: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon', default: null },
     totalAmount: { type: Number, required: true },
     status: {
       type: String,

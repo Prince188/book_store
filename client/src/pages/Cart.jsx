@@ -2,21 +2,54 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
-import { createOrder } from '../api';
+import { createOrder, validateCoupon } from '../api';
 
 const Cart = () => {
   const { user } = useContext(AuthContext);
   const { cart, fetchCart, updateItem, removeItem } = useContext(CartContext);
   const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [discount, setDiscount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
 
   useEffect(() => { if (user) fetchCart(); }, [user, fetchCart]);
+
+  const subtotal = cart?.items?.reduce((s, i) => s + i.book.price * i.quantity, 0) || 0;
+  const shipping = subtotal > 50 ? 0 : 5.99;
+  const grandTotal = Math.round((subtotal - discount + shipping) * 100) / 100;
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const res = await validateCoupon({ code: couponCode, orderTotal: subtotal });
+      setAppliedCoupon(res.data.coupon);
+      setDiscount(res.data.discount);
+      setCouponCode('');
+    } catch (err) {
+      setCouponError(err.response?.data?.message || 'Invalid coupon');
+      setAppliedCoupon(null);
+      setDiscount(0);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setDiscount(0);
+    setCouponError('');
+  };
 
   const handleCheckout = async () => {
     if (!user) return navigate('/login');
     setIsCheckingOut(true);
     try {
-      await createOrder();
+      await createOrder({ couponCode: appliedCoupon?.code || undefined });
       await fetchCart();
       navigate('/orders');
     } catch (err) {
@@ -49,10 +82,6 @@ const Cart = () => {
       </div>
     );
   }
-
-  const total = cart.items.reduce((s, i) => s + i.book.price * i.quantity, 0);
-  const shipping = total > 50 ? 0 : 5.99;
-  const grandTotal = total + shipping;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -94,8 +123,35 @@ const Cart = () => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm sticky top-24">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Order summary</h2>
+
+              {/* Coupon */}
+              <div className="mb-4">
+                {appliedCoupon ? (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2.5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-xs font-semibold text-emerald-700">{appliedCoupon.code}</span>
+                        <p className="text-xs text-emerald-600 mt-0.5">Discount: -₹{discount.toFixed(2)}</p>
+                      </div>
+                      <button onClick={handleRemoveCoupon} className="text-emerald-500 hover:text-emerald-700 text-sm font-medium">Remove</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex gap-2">
+                      <input value={couponCode} onChange={(e) => setCouponCode(e.target.value.toUpperCase())} onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleApplyCoupon())} placeholder="Coupon code" className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase" />
+                      <button onClick={handleApplyCoupon} disabled={!couponCode.trim() || couponLoading} className="px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap">{couponLoading ? '...' : 'Apply'}</button>
+                    </div>
+                    {couponError && <p className="text-xs text-red-500 mt-1">{couponError}</p>}
+                  </div>
+                )}
+              </div>
+
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{total.toFixed(2)}</span></div>
+                <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-emerald-600"><span>Discount</span><span>-₹{discount.toFixed(2)}</span></div>
+                )}
                 <div className="flex justify-between text-gray-600"><span>Shipping</span><span>{shipping === 0 ? <span className="text-emerald-600 font-medium">Free</span> : `₹${shipping.toFixed(2)}`}</span></div>
                 {shipping === 0 && (
                   <div className="bg-emerald-50 text-emerald-700 text-xs font-medium px-3 py-2 rounded-lg">Free shipping applied!</div>
@@ -105,6 +161,7 @@ const Cart = () => {
                   <span>₹{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
+
               <button onClick={handleCheckout} disabled={isCheckingOut}
                 className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">
                 {isCheckingOut ? (
