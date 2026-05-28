@@ -30,7 +30,7 @@ const ReviewSection = ({ bookId, refreshKey }) => {
     }).finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchReviews(); }, [bookId, refreshKey]);
+  useEffect(() => { fetchReviews(); }, [bookId, refreshKey]); // eslint-disable-line
 
   useEffect(() => {
     if (user) getMyReview(bookId).then((r) => setMyReview(r.data)).catch(() => {});

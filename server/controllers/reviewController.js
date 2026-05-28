@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Review = require('../models/Review');
 const Book = require('../models/Book');
 
@@ -7,7 +8,7 @@ const getBookReviews = async (req, res) => {
       .populate('user', 'name')
       .sort({ createdAt: -1 });
     const avg = await Review.aggregate([
-      { $match: { book: require('mongoose').Types.ObjectId(req.params.bookId) } },
+      { $match: { book: new mongoose.Types.ObjectId(req.params.bookId) } },
       { $group: { _id: '$book', averageRating: { $avg: '$rating' }, count: { $sum: 1 } } },
     ]);
     res.json({ reviews, averageRating: avg[0]?.averageRating || 0, total: avg[0]?.count || 0 });
@@ -72,7 +73,7 @@ const deleteReview = async (req, res) => {
     if (review.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Not authorized' });
     }
-    await review.remove();
+    await Review.findByIdAndDelete(req.params.id);
     res.json({ message: 'Review deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });

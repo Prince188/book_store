@@ -26,8 +26,9 @@ const BookDetail = () => {
   useEffect(() => {
     getBook(id).then((r) => {
       setBook(r.data);
-      if (r.data.category?._id) {
-        getBooks({ category: r.data.category._id, limit: 5 }).then((res) => {
+      const catId = (r.data.categories || [])[0]?._id;
+      if (catId) {
+        getBooks({ category: catId, limit: 5 }).then((res) => {
           setRelated(res.data.books.filter((b) => b._id !== r.data._id).slice(0, 4));
         });
       }
@@ -69,10 +70,14 @@ const BookDetail = () => {
           </div>
 
           <div className="space-y-6">
-            {book.category?.name && (
-              <span className="inline-flex items-center text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">
-                {book.category.name}
-              </span>
+            {(book.categories || []).length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {(book.categories || []).map((c) => (
+                  <span key={c?._id} className="inline-flex text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">
+                    {c?.name}
+                  </span>
+                ))}
+              </div>
             )}
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{book.title}</h1>
             <p className="text-lg text-gray-500">by {book.author}</p>
@@ -130,7 +135,7 @@ const BookDetail = () => {
 
         {related.length > 0 && (
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-6">More in {book.category?.name}</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">More in {(book.categories || [])[0]?.name || 'this category'}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {related.map((b) => <BookCard key={b._id} book={b} />)}
             </div>

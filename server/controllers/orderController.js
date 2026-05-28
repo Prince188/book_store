@@ -80,7 +80,8 @@ const getOrder = async (req, res) => {
 
     if (!order) return res.status(404).json({ message: 'Order not found' });
 
-    if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    const isOwner = order.user && order.user._id.toString() === req.user._id.toString();
+    if (!isOwner && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Not authorized' });
     }
 
@@ -106,9 +107,10 @@ const updateOrderStatus = async (req, res) => {
 
 const getSalesStats = async (req, res) => {
   try {
-    const now = new Date();
-    const thirtyDaysAgo = new Date(now.setDate(now.getDate() - 30));
-    const twelveMonthsAgo = new Date(now.setFullYear(now.getFullYear() - 1));
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
 
     const dailySales = await Order.aggregate([
       { $match: { createdAt: { $gte: thirtyDaysAgo }, status: { $ne: 'cancelled' } } },
@@ -157,7 +159,8 @@ const downloadInvoice = async (req, res) => {
       .populate('items.book');
 
     if (!order) return res.status(404).json({ message: 'Order not found' });
-    if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    const isOwner = order.user && order.user._id.toString() === req.user._id.toString();
+    if (!isOwner && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Not authorized' });
     }
 

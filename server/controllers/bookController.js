@@ -7,7 +7,7 @@ const getBooks = async (req, res) => {
 
     let query = {};
 
-    if (category) query.category = category;
+    if (category) query.categories = { $in: [category] };
 
     if (search) {
       query.$or = [
@@ -30,7 +30,7 @@ const getBooks = async (req, res) => {
 
     const total = await Book.countDocuments(query);
     const books = await Book.find(query)
-      .populate('category', 'name')
+      .populate('categories', 'name')
       .sort(sortOption)
       .skip((page - 1) * limit)
       .limit(Number(limit));
@@ -43,7 +43,7 @@ const getBooks = async (req, res) => {
 
 const getBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id).populate('category', 'name');
+    const book = await Book.findById(req.params.id).populate('categories', 'name');
     if (!book) {
       return res.status(404).json({ message: 'Book not found' });
     }
@@ -55,7 +55,11 @@ const getBook = async (req, res) => {
 
 const createBook = async (req, res) => {
   try {
-    const { title, author, publisher, price, quantity, category, description } = req.body;
+    const { title, author, publisher, price, quantity, description } = req.body;
+    let categories = req.body.categories;
+    if (!Array.isArray(categories)) {
+      categories = categories ? [categories] : [];
+    }
 
     let image = '';
     if (req.file) {
@@ -66,10 +70,10 @@ const createBook = async (req, res) => {
     }
 
     const book = await Book.create({
-      title, author, publisher, price, quantity, category, image, description,
+      title, author, publisher, price, quantity, categories, image, description,
     });
 
-    const populated = await book.populate('category', 'name');
+    const populated = await book.populate('categories', 'name');
     res.status(201).json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -83,14 +87,20 @@ const updateBook = async (req, res) => {
       return res.status(404).json({ message: 'Book not found' });
     }
 
-    const { title, author, publisher, price, quantity, category, description } = req.body;
+    const { title, author, publisher, price, quantity, description } = req.body;
+    let categories = req.body.categories;
 
     book.title = title || book.title;
     book.author = author || book.author;
     book.publisher = publisher !== undefined ? publisher : book.publisher;
     book.price = price || book.price;
     book.quantity = quantity !== undefined ? quantity : book.quantity;
-    book.category = category || book.category;
+    if (req.body.categories !== undefined) {
+      if (!Array.isArray(categories)) {
+        categories = categories ? [categories] : [];
+      }
+      book.categories = categories;
+    }
     book.description = description !== undefined ? description : book.description;
 
     if (req.file) {
@@ -101,7 +111,7 @@ const updateBook = async (req, res) => {
     }
 
     const updated = await book.save();
-    const populated = await updated.populate('category', 'name');
+    const populated = await updated.populate('categories', 'name');
     res.json(populated);
   } catch (error) {
     res.status(500).json({ message: error.message });

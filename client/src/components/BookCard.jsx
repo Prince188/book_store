@@ -51,9 +51,9 @@ const BookCard = ({ book }) => {
         <div className="p-4 space-y-2">
           <h3 className="font-semibold text-gray-900 leading-snug line-clamp-2">{book.title}</h3>
           <p className="text-sm text-gray-500">{book.author}</p>
-          {book.category?.name && (
+          {(book.categories || []).length > 0 && (
             <span className="inline-block text-xs font-medium text-indigo-600 bg-indigo-50 px-2.5 py-0.5 rounded-lg">
-              {book.category.name}
+              {(book.categories || []).map((c) => c?.name).join(', ')}
             </span>
           )}
           <div className="flex items-center justify-between pt-2 border-t border-gray-50">
