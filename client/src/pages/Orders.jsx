@@ -6,332 +6,71 @@ import { getOrders } from '../api';
 const Orders = () => {
   const { user } = useContext(AuthContext);
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState(null);
 
-  useEffect(() => {
-    if (user) {
-      setIsLoading(true);
-      getOrders()
-        .then((res) => setOrders(res.data))
-        .catch(() => { })
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
-    }
-  }, [user]);
-
-  const statusConfig = {
-    pending: {
-      color: 'bg-amber-100 text-amber-700',
-      icon: '⏳',
-      label: 'Pending',
-      description: 'Your order is being processed'
-    },
-    processing: {
-      color: 'bg-blue-100 text-blue-700',
-      icon: '🔄',
-      label: 'Processing',
-      description: 'We are preparing your order'
-    },
-    shipped: {
-      color: 'bg-purple-100 text-purple-700',
-      icon: '📦',
-      label: 'Shipped',
-      description: 'Your order is on the way'
-    },
-    delivered: {
-      color: 'bg-green-100 text-green-700',
-      icon: '✅',
-      label: 'Delivered',
-      description: 'Your order has been delivered'
-    },
-    cancelled: {
-      color: 'bg-red-100 text-red-700',
-      icon: '❌',
-      label: 'Cancelled',
-      description: 'Your order has been cancelled'
-    },
-  };
-
-  const getStatusInfo = (status) => {
-    return statusConfig[status] || statusConfig.pending;
-  };
+  useEffect(() => { if (user) getOrders().then((r) => setOrders(r.data)).catch(() => {}); }, [user]);
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-amber-50/30 to-white flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="text-6xl mb-4">📦</div>
-          <h2 className="text-2xl font-serif font-bold text-stone-800 mb-3">Orders are Locked</h2>
-          <p className="text-stone-600 mb-6">
-            Please login to view your order history and track your purchases.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link
-              to="/login"
-              className="px-6 py-3 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/books"
-              className="px-6 py-3 border border-amber-200 text-stone-700 rounded-xl font-semibold hover:bg-amber-50 transition-colors"
-            >
-              Browse Books
-            </Link>
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white rounded-3xl border border-gray-100 p-12 shadow-sm max-w-sm mx-6">
+          <div className="text-5xl mb-4">📋</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Sign in to view orders</h2>
+          <Link to="/login" className="inline-block px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 shadow-sm transition-all">Sign in</Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/30 to-white py-8">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <nav className="flex items-center gap-2 text-sm mb-4 text-stone-500">
-            <Link to="/" className="hover:text-amber-600 transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-stone-800 font-medium">My Orders</span>
-          </nav>
-
-          <div className="flex justify-between items-end flex-wrap gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-serif font-bold text-stone-800 flex items-center gap-3">
-                <span>📦</span>
-                My Orders
-                <span className="text-lg font-normal text-stone-500 bg-white px-3 py-1 rounded-full">
-                  {orders.length} {orders.length === 1 ? 'order' : 'orders'}
-                </span>
-              </h1>
-              <p className="text-stone-500 mt-2">Track and manage your purchases</p>
-            </div>
-            {orders.length > 0 && (
-              <Link
-                to="/books"
-                className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium transition-colors"
-              >
-                <span>+</span>
-                Continue Shopping
-              </Link>
-            )}
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-4xl mx-auto px-6 py-12">
+          <h1 className="text-3xl font-bold text-gray-900">Orders</h1>
+          <p className="text-gray-500 mt-1">{orders.length} {orders.length === 1 ? 'order' : 'orders'}</p>
         </div>
+      </div>
 
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="space-y-4">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-white rounded-2xl border border-amber-100 p-6">
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="h-4 bg-amber-100 rounded w-32"></div>
-                    <div className="h-6 bg-amber-100 rounded w-24"></div>
-                  </div>
-                  <div className="space-y-3">
-                    <div className="h-12 bg-amber-50 rounded"></div>
-                    <div className="h-12 bg-amber-50 rounded"></div>
-                  </div>
-                  <div className="mt-4 flex justify-between">
-                    <div className="h-6 bg-amber-100 rounded w-24"></div>
-                    <div className="h-8 bg-amber-100 rounded w-32"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : orders.length === 0 ? (
-          /* Empty State */
-          <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-12 text-center">
-            <div className="text-8xl mb-6">📦📖</div>
-            <h2 className="text-2xl font-serif font-bold text-stone-800 mb-3">No Orders Yet</h2>
-            <p className="text-stone-500 mb-6 max-w-md mx-auto">
-              You haven't placed any orders yet. Start exploring our collection and make your first purchase!
-            </p>
-            <Link
-              to="/books"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-amber-600 to-amber-700 text-white rounded-xl font-semibold hover:from-amber-700 hover:to-amber-800 transition-all duration-300 shadow-md hover:shadow-lg"
-            >
-              <span>📚</span>
-              Start Shopping
-              <span>→</span>
-            </Link>
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        {orders.length === 0 ? (
+          <div className="text-center bg-white rounded-3xl border border-gray-100 p-12 shadow-sm max-w-sm mx-auto">
+            <p className="text-gray-500 mb-6">No orders yet.</p>
+            <Link to="/books" className="inline-block px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 shadow-sm transition-all">Start shopping</Link>
           </div>
         ) : (
-          /* Orders List */
-          <div className="space-y-6">
-            {orders.map((order, index) => {
-              const statusInfo = getStatusInfo(order.status);
-              const orderDate = new Date(order.createdAt);
-              const isExpanded = selectedOrder === order._id;
-
-              return (
-                <div
-                  key={order._id}
-                  className="bg-white rounded-2xl border border-amber-100 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                    animation: 'fadeInUp 0.5s ease-out forwards',
-                    opacity: 0
-                  }}
-                >
-                  {/* Order Header */}
-                  <div className="p-6 border-b border-amber-50">
-                    <div className="flex flex-wrap justify-between items-start gap-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <span className="text-sm font-mono text-stone-500 bg-amber-50 px-3 py-1 rounded-full">
-                            #{order._id.slice(-8).toUpperCase()}
-                          </span>
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}>
-                            <span>{statusInfo.icon}</span>
-                            <span>{statusInfo.label}</span>
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-stone-500">
-                          <span>📅 {orderDate.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}</span>
-                          <span>⏰ {orderDate.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}</span>
-                        </div>
-                        <p className="text-sm text-stone-600">{statusInfo.description}</p>
-                      </div>
-
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-amber-700">
-                          ${order.totalAmount.toFixed(2)}
-                        </div>
-                        <div className="text-xs text-stone-500 mt-1">
-                          {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Expand/Collapse Button */}
-                    <button
-                      onClick={() => setSelectedOrder(isExpanded ? null : order._id)}
-                      className="mt-4 text-sm text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1 transition-colors"
-                    >
-                      {isExpanded ? 'Hide Details ↑' : 'View Details ↓'}
-                    </button>
+          <div className="space-y-4">
+            {orders.map((order) => (
+              <Link to={`/orders/${order._id}`} key={order._id} className="block bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <p className="font-semibold text-gray-900">Order #{order._id.slice(-8).toUpperCase()}</p>
+                    <p className="text-xs text-gray-400 mt-1">{new Date(order.createdAt).toLocaleDateString()}</p>
                   </div>
-
-                  {/* Order Items (Expandable) */}
-                  {isExpanded && (
-                    <div className="p-6 bg-amber-50/30 animate-slideDown">
-                      <h3 className="font-semibold text-stone-800 mb-3 flex items-center gap-2">
-                        <span>📚</span>
-                        Order Items
-                      </h3>
-                      <div className="space-y-3">
-                        {order.items.map((item, idx) => (
-                          <div key={item._id || idx} className="flex items-center gap-4 bg-white rounded-xl p-3 border border-amber-100">
-                            <div className="flex-1">
-                              <Link
-                                to={`/books/${item.book?._id}`}
-                                className="font-medium text-stone-800 hover:text-amber-600 transition-colors"
-                              >
-                                {item.book?.title || 'Book'}
-                              </Link>
-                              <p className="text-sm text-stone-500">${item.price.toFixed(2)} each</p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-stone-600">Qty: {item.quantity}</span>
-                              <div className="w-px h-6 bg-amber-200"></div>
-                              <span className="font-semibold text-amber-700">
-                                ${(item.price * item.quantity).toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Order Summary */}
-                      <div className="mt-4 pt-4 border-t border-amber-200">
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-stone-600">Subtotal</span>
-                          <span className="text-stone-800">${order.totalAmount.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-sm mt-1">
-                          <span className="text-stone-600">Shipping</span>
-                          <span className="text-green-600">Free</span>
-                        </div>
-                        <div className="flex justify-between items-center text-lg font-bold mt-3 pt-3 border-t border-amber-200">
-                          <span className="text-stone-800">Total</span>
-                          <span className="text-amber-700">${order.totalAmount.toFixed(2)}</span>
-                        </div>
-                      </div>
-
-                      {/* Shipping Address (if available) */}
-                      {order.shippingAddress && (
-                        <div className="mt-4 pt-4 border-t border-amber-200">
-                          <h4 className="text-sm font-semibold text-stone-700 mb-2">Shipping Address</h4>
-                          <p className="text-sm text-stone-600">
-                            {order.shippingAddress.street}<br />
-                            {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}<br />
-                            {order.shippingAddress.country}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  <span className={`text-xs font-semibold px-3 py-1 rounded-lg ${
+                    order.status === 'delivered' ? 'bg-emerald-50 text-emerald-600' :
+                    order.status === 'cancelled' ? 'bg-red-50 text-red-500' :
+                    order.status === 'shipped' ? 'bg-blue-50 text-blue-600' :
+                    'bg-gray-100 text-gray-600'
+                  }`}>
+                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Reorder Section */}
-        {orders.length > 0 && (
-          <div className="mt-12 bg-gradient-to-r from-amber-100 to-amber-50 rounded-2xl p-6 border border-amber-200">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div>
-                <h3 className="font-serif font-bold text-stone-800 text-lg">Love what you bought?</h3>
-                <p className="text-stone-600 text-sm">Discover more books from your favorite categories</p>
-              </div>
-              <Link
-                to="/books"
-                className="px-6 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
-              >
-                Continue Shopping
+                <div className="border-t border-gray-50 pt-3 space-y-2">
+                  {order.items.map((item) => (
+                    <div key={item._id} className="flex justify-between text-sm">
+                      <span className="text-gray-600">{item.book?.title || 'Book'} <span className="text-gray-400">x{item.quantity}</span></span>
+                      <span className="font-medium text-gray-900">${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-gray-100 mt-3 pt-3 flex justify-between font-bold text-gray-900">
+                  <span>Total</span>
+                  <span>${order.totalAmount.toFixed(2)}</span>
+                </div>
               </Link>
-            </div>
+            ))}
           </div>
         )}
       </div>
-
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slideDown {
-          animation: slideDown 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 };

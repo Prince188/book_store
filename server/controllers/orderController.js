@@ -72,6 +72,24 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+const getOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate('user', 'name email phone address')
+      .populate('items.book');
+
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+
+    if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -86,4 +104,4 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getOrders, getAllOrders, updateOrderStatus };
+module.exports = { createOrder, getOrders, getOrder, getAllOrders, updateOrderStatus };

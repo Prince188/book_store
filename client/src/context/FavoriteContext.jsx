@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useCallback } from 'react';
 import { getFavorites, toggleFavorite } from '../api';
 import { AuthContext } from './AuthContext';
 
@@ -8,11 +8,11 @@ export const FavoriteProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const { user } = useContext(AuthContext);
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     if (!user) { setFavorites([]); return; }
     const res = await getFavorites();
     setFavorites(res.data);
-  };
+  }, [user]);
 
   const toggle = async (bookId) => {
     const res = await toggleFavorite(bookId);

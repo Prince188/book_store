@@ -10,61 +10,60 @@ const AllBooks = () => {
   const [total, setTotal] = useState(0);
   const [pages, setPages] = useState(1);
   const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [sort, setSort] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [sort, setSort] = useState(searchParams.get('sort') || '');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const category = searchParams.get('category') || '';
   const page = Number(searchParams.get('page')) || 1;
 
-  useEffect(() => {
-    getCategories().then((res) => setCategories(res.data));
+  useEffect(() => { 
+    getCategories().then((r) => setCategories(r.data)); 
   }, []);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      setIsLoading(true);
-      const params = { page, limit: 12 };
-      if (category) params.category = category;
-      if (searchParams.get('search')) params.search = searchParams.get('search');
-      if (sort) params.sort = sort;
-
-      try {
-        const res = await getBooks(params);
-        setBooks(res.data.books);
-        setTotal(res.data.total);
-        setPages(res.data.pages);
-      } catch (error) {
-        console.error('Error fetching books:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchBooks();
+    const params = { page, limit: 12 };
+    if (category) params.category = category;
+    if (searchParams.get('search')) params.search = searchParams.get('search');
+    if (sort) params.sort = sort;
+    getBooks(params).then((r) => { 
+      setBooks(r.data.books); 
+      setTotal(r.data.total); 
+      setPages(r.data.pages); 
+    });
   }, [category, page, sort, searchParams]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const params = {};
-    if (search) params.search = search;
-    if (category) params.category = category;
-    setSearchParams(params);
+    const p = {};
+    if (search) p.search = search;
+    if (category) p.category = category;
+    if (sort) p.sort = sort;
+    setSearchParams(p);
   };
 
   const handleCategory = (catId) => {
-    const params = {};
-    if (catId) params.category = catId;
-    if (search) params.search = search;
-    setSearchParams(params);
-    setIsFilterOpen(false);
+    const p = {};
+    if (catId) p.category = catId;
+    if (search) p.search = search;
+    if (sort) p.sort = sort;
+    setSearchParams(p);
+  };
+
+  const handleSort = (value) => {
+    setSort(value);
+    const p = {};
+    if (value) p.sort = value;
+    if (category) p.category = category;
+    if (search) p.search = search;
+    setSearchParams(p);
   };
 
   const handlePage = (p) => {
     const params = { page: p };
     if (category) params.category = category;
     if (search) params.search = search;
+    if (sort) params.sort = sort;
     setSearchParams(params);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const clearFilters = () => {
@@ -73,139 +72,140 @@ const AllBooks = () => {
     setSearchParams({});
   };
 
-  const sortOptions = [
-    { value: '', label: 'Latest Arrivals' },
-    { value: 'price_asc', label: 'Price: Low to High' },
-    { value: 'price_desc', label: 'Price: High to Low' },
-    { value: 'name_asc', label: 'Title: A to Z' },
-    { value: 'name_desc', label: 'Title: Z to A' },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50/30 to-white">
-      {/* Hero Banner */}
-      <div className="relative bg-gradient-to-r from-amber-800 to-stone-800 text-white py-12 mb-8">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full filter blur-3xl"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-serif font-bold mb-3">
-            Explore Our Collection
-          </h1>
-          <p className="text-amber-100 text-lg">
-            Discover thousands of books across all genres
-          </p>
+    <div className="min-h-screen bg-[#FAFAF9]">
+      {/* Header Section */}
+      <div className="bg-white border-b border-[#E7E5E4]">
+        <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#1C1917] tracking-tight">
+              All books
+            </h1>
+            <p className="text-[#78716C] mt-3 text-lg">
+              Explore our complete collection of{' '}
+              <span className="font-semibold text-[#8B5CF6]">{total}</span>{' '}
+              {total === 1 ? 'title' : 'titles'}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        {/* Search and Filters Bar */}
-        <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-4 mb-8">
+      <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
+        {/* Filters Bar */}
+        <div className="bg-white rounded-2xl border border-[#E7E5E4] p-4 shadow-sm mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search Form */}
             <form onSubmit={handleSearch} className="flex-1">
               <div className="relative">
-                <input
-                  type="text"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search by title, author, or ISBN..."
-                  className="w-full pl-10 pr-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
-                />
-                <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8A29E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-                <button
-                  type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 bg-amber-600 text-white rounded-lg text-sm hover:bg-amber-700 transition-colors"
-                >
-                  Search
-                </button>
+                <input 
+                  type="text" 
+                  value={search} 
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by title or author..."
+                  className="w-full pl-11 pr-4 py-2.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl text-sm text-[#1C1917] placeholder:text-[#A8A29E] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/20 focus:border-[#8B5CF6] transition-all" 
+                />
               </div>
             </form>
 
             {/* Sort Dropdown */}
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="px-4 py-3 border border-amber-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white cursor-pointer"
-            >
-              {sortOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-
-            {/* Mobile Filter Toggle */}
-            <button
-              onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className="lg:hidden px-4 py-3 border border-amber-200 rounded-xl hover:bg-amber-50 transition-colors flex items-center justify-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            <div className="relative">
+              <select 
+                value={sort} 
+                onChange={(e) => handleSort(e.target.value)}
+                className="w-full lg:w-48 bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl px-4 py-2.5 text-sm text-[#57534E] focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/20 focus:border-[#8B5CF6] transition-all cursor-pointer appearance-none"
+              >
+                <option value="">Sort: Latest</option>
+                <option value="price_asc">Price: Low to high</option>
+                <option value="price_desc">Price: High to low</option>
+                <option value="name_asc">Name: A-Z</option>
+                <option value="name_desc">Name: Z-A</option>
+              </select>
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A8A29E] pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
-              Filters
-            </button>
+            </div>
 
             {/* Clear Filters Button */}
             {(search || category || sort) && (
-              <button
+              <button 
                 onClick={clearFilters}
-                className="px-4 py-3 text-amber-700 hover:text-amber-800 font-medium transition-colors"
+                className="px-4 py-2.5 text-sm font-medium text-[#78716C] hover:text-[#8B5CF6] transition-colors"
               >
-                Clear All
+                Clear all
               </button>
             )}
-          </div>
 
-          {/* Categories - Desktop */}
-          <div className="hidden lg:block mt-4 overflow-x-auto">
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => handleCategory('')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${!category
-                    ? 'bg-amber-600 text-white shadow-md'
-                    : 'bg-amber-50 text-stone-700 hover:bg-amber-100'
-                  }`}
-              >
-                All Books
+            {/* Mobile Filter Toggle */}
+            <button 
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className="lg:hidden flex items-center justify-center gap-2 px-4 py-2.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl text-sm font-medium text-[#57534E]"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              Categories
+            </button>
+          </div>
+        </div>
+
+        {/* Categories - Desktop */}
+        <div className="hidden lg:block mb-8">
+          <div className="flex flex-wrap gap-2">
+            <button 
+              onClick={() => handleCategory('')}
+              className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 ${
+                !category 
+                  ? 'bg-[#1C1917] text-white shadow-sm' 
+                  : 'bg-white border border-[#E7E5E4] text-[#57534E] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
+              }`}>
+              All books
+            </button>
+            {categories.map((cat) => (
+              <button 
+                key={cat._id} 
+                onClick={() => handleCategory(cat._id)}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 whitespace-nowrap ${
+                  category === cat._id 
+                    ? 'bg-[#1C1917] text-white shadow-sm' 
+                    : 'bg-white border border-[#E7E5E4] text-[#57534E] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
+                }`}>
+                {cat.name}
               </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat._id}
-                  onClick={() => handleCategory(cat._id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 whitespace-nowrap ${category === cat._id
-                      ? 'bg-amber-600 text-white shadow-md'
-                      : 'bg-amber-50 text-stone-700 hover:bg-amber-100'
-                    }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
 
         {/* Categories - Mobile Dropdown */}
         {isFilterOpen && (
-          <div className="lg:hidden bg-white rounded-2xl shadow-sm border border-amber-100 p-4 mb-8 animate-slideDown">
-            <h3 className="font-semibold text-stone-800 mb-3">Categories</h3>
+          <div className="lg:hidden mb-8 bg-white rounded-2xl border border-[#E7E5E4] p-4 shadow-sm animate-slideDown">
             <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => handleCategory('')}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${!category ? 'bg-amber-600 text-white' : 'bg-amber-50 text-stone-700'
-                  }`}
-              >
-                All
+              <button 
+                onClick={() => {
+                  handleCategory('');
+                  setIsFilterOpen(false);
+                }}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                  !category 
+                    ? 'bg-[#1C1917] text-white' 
+                    : 'bg-[#FAFAF9] border border-[#E7E5E4] text-[#57534E]'
+                }`}>
+                All books
               </button>
               {categories.map((cat) => (
-                <button
-                  key={cat._id}
-                  onClick={() => handleCategory(cat._id)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${category === cat._id ? 'bg-amber-600 text-white' : 'bg-amber-50 text-stone-700'
-                    }`}
-                >
+                <button 
+                  key={cat._id} 
+                  onClick={() => {
+                    handleCategory(cat._id);
+                    setIsFilterOpen(false);
+                  }}
+                  className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                    category === cat._id 
+                      ? 'bg-[#1C1917] text-white' 
+                      : 'bg-[#FAFAF9] border border-[#E7E5E4] text-[#57534E]'
+                  }`}>
                   {cat.name}
                 </button>
               ))}
@@ -213,141 +213,137 @@ const AllBooks = () => {
           </div>
         )}
 
-        {/* Results Info */}
-        <div className="flex justify-between items-center mb-6 flex-wrap gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">📚</span>
-            <p className="text-stone-600">
-              Showing <span className="font-semibold text-stone-800">{books.length}</span> of{' '}
-              <span className="font-semibold text-stone-800">{total}</span> books
-            </p>
-          </div>
-          {category && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-stone-500">Category:</span>
-              <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
-                {categories.find(c => c._id === category)?.name || category}
+        {/* Active Filters Display */}
+        {(category || search || sort) && (
+          <div className="mb-6 flex flex-wrap gap-2">
+            {category && (
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F3E8FF] text-[#8B5CF6] text-xs font-medium rounded-full">
+                Category: {categories.find(c => c._id === category)?.name}
+                <button onClick={() => handleCategory('')} className="hover:text-[#7C3AED]">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </span>
-            </div>
-          )}
+            )}
+            {search && (
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#E0F2FE] text-[#0284C7] text-xs font-medium rounded-full">
+                Search: {search}
+                <button onClick={() => {
+                  setSearch('');
+                  handleSearch({ preventDefault: () => {} });
+                }} className="hover:text-[#0369A1]">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </span>
+            )}
+            {sort && (
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FEF3C7] text-[#D97706] text-xs font-medium rounded-full">
+                Sort: {sort === 'price_asc' ? 'Price ↑' : sort === 'price_desc' ? 'Price ↓' : sort === 'name_asc' ? 'A-Z' : 'Z-A'}
+                <button onClick={() => handleSort('')} className="hover:text-[#B45309]">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Results Count */}
+        <div className="mb-6">
+          <p className="text-sm text-[#78716C]">
+            Showing <span className="font-medium text-[#1C1917]">{books.length}</span> of{' '}
+            <span className="font-medium text-[#1C1917]">{total}</span> books
+          </p>
         </div>
 
         {/* Books Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-amber-100 rounded-2xl h-64 mb-3"></div>
-                <div className="h-4 bg-amber-100 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-amber-50 rounded w-1/2 mb-2"></div>
-                <div className="h-3 bg-amber-50 rounded w-1/3"></div>
-              </div>
+        {books.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+            {books.map((book) => (
+              <BookCard key={book._id} book={book} />
             ))}
           </div>
-        ) : books.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {books.map((book, index) => (
-                <div
-                  key={book._id}
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                    animation: 'fadeInUp 0.5s ease-out forwards',
-                    opacity: 0
-                  }}
-                >
-                  <BookCard book={book} />
-                </div>
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {pages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-12">
-                <button
-                  onClick={() => handlePage(page - 1)}
-                  disabled={page === 1}
-                  className={`px-4 py-2 rounded-lg transition-all ${page === 1
-                      ? 'bg-amber-50 text-stone-300 cursor-not-allowed'
-                      : 'bg-white border border-amber-200 text-stone-700 hover:bg-amber-50'
-                    }`}
-                >
-                  ← Previous
-                </button>
-
-                <div className="flex gap-1">
-                  {Array.from({ length: Math.min(pages, 7) }, (_, i) => {
-                    let pageNum;
-                    if (pages <= 7) {
-                      pageNum = i + 1;
-                    } else if (page <= 4) {
-                      pageNum = i + 1;
-                      if (i === 6) pageNum = pages;
-                    } else if (page >= pages - 3) {
-                      pageNum = pages - 6 + i;
-                    } else {
-                      pageNum = page - 3 + i;
-                    }
-
-                    if (pageNum > pages) return null;
-                    if (i === 5 && pages > 7 && page < pages - 3) {
-                      return <span key="ellipsis" className="px-3 py-2">...</span>;
-                    }
-
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => handlePage(pageNum)}
-                        className={`w-10 h-10 rounded-lg font-medium transition-all ${page === pageNum
-                            ? 'bg-amber-600 text-white shadow-md'
-                            : 'bg-white border border-amber-200 text-stone-700 hover:bg-amber-50'
-                          }`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => handlePage(page + 1)}
-                  disabled={page === pages}
-                  className={`px-4 py-2 rounded-lg transition-all ${page === pages
-                      ? 'bg-amber-50 text-stone-300 cursor-not-allowed'
-                      : 'bg-white border border-amber-200 text-stone-700 hover:bg-amber-50'
-                    }`}
-                >
-                  Next →
-                </button>
-              </div>
-            )}
-          </>
         ) : (
-          <div className="text-center py-16 bg-white rounded-2xl border border-amber-100">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-stone-800 mb-2">No books found</h3>
-            <p className="text-stone-500 mb-6">Try adjusting your search or filters</p>
-            <button
+          /* Empty State */
+          <div className="text-center py-20">
+            <div className="w-24 h-24 bg-[#FAFAF9] rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-12 h-12 text-[#A8A29E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-[#1C1917] mb-2">No books found</h3>
+            <p className="text-[#78716C] mb-4">Try adjusting your search or filter criteria</p>
+            <button 
               onClick={clearFilters}
-              className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+              className="px-5 py-2 bg-[#1C1917] text-white text-sm font-medium rounded-xl hover:bg-[#292524] transition-colors"
             >
-              Clear Filters
+              Clear all filters
+            </button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {pages > 1 && (
+          <div className="flex justify-center gap-2 mt-12">
+            <button
+              onClick={() => handlePage(page - 1)}
+              disabled={page === 1}
+              className={`w-10 h-10 text-sm font-medium rounded-xl transition-all ${
+                page === 1
+                  ? 'bg-[#FAFAF9] border border-[#E7E5E4] text-[#A8A29E] cursor-not-allowed'
+                  : 'bg-white border border-[#E7E5E4] text-[#57534E] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
+              }`}
+            >
+              ←
+            </button>
+            
+            {Array.from({ length: Math.min(5, pages) }, (_, i) => {
+              let pageNum;
+              if (pages <= 5) {
+                pageNum = i + 1;
+              } else if (page <= 3) {
+                pageNum = i + 1;
+              } else if (page >= pages - 2) {
+                pageNum = pages - 4 + i;
+              } else {
+                pageNum = page - 2 + i;
+              }
+              
+              return (
+                <button 
+                  key={pageNum} 
+                  onClick={() => handlePage(pageNum)}
+                  className={`w-10 h-10 text-sm font-medium rounded-xl transition-all ${
+                    page === pageNum 
+                      ? 'bg-[#1C1917] text-white shadow-sm' 
+                      : 'bg-white border border-[#E7E5E4] text-[#57534E] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
+                  }`}>
+                  {pageNum}
+                </button>
+              );
+            })}
+            
+            <button
+              onClick={() => handlePage(page + 1)}
+              disabled={page === pages}
+              className={`w-10 h-10 text-sm font-medium rounded-xl transition-all ${
+                page === pages
+                  ? 'bg-[#FAFAF9] border border-[#E7E5E4] text-[#A8A29E] cursor-not-allowed'
+                  : 'bg-white border border-[#E7E5E4] text-[#57534E] hover:border-[#8B5CF6] hover:text-[#8B5CF6]'
+              }`}
+            >
+              →
             </button>
           </div>
         )}
       </div>
 
+      {/* Animation Styles */}
       <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
         @keyframes slideDown {
           from {
             opacity: 0;
@@ -359,7 +355,7 @@ const AllBooks = () => {
           }
         }
         .animate-slideDown {
-          animation: slideDown 0.3s ease-out;
+          animation: slideDown 0.2s ease-out;
         }
       `}</style>
     </div>

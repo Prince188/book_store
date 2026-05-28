@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useCallback } from 'react';
 import { getCart, addToCart, updateCartItem, removeFromCart } from '../api';
 import { AuthContext } from './AuthContext';
 
@@ -8,11 +8,11 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const { user } = useContext(AuthContext);
 
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     if (!user) { setCart(null); return; }
     const res = await getCart();
     setCart(res.data);
-  };
+  }, [user]);
 
   const addItem = async (bookId, quantity = 1) => {
     const res = await addToCart({ bookId, quantity });
