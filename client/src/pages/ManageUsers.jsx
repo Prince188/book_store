@@ -7,7 +7,7 @@ const ManageUsers = () => {
   const { addToast } = useContext(ToastContext);
   const [users, setUsers] = useState([]);
 
-  const load = () => getAllUsers().then((r) => setUsers(r.data)).catch(() => {});
+  const load = () => { getAllUsers().then((r) => setUsers(r.data)).catch(() => {}); };
   useEffect(load, []);
 
   const toggleRole = async (id, currentRole) => {

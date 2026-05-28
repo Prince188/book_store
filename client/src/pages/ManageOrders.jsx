@@ -9,7 +9,7 @@ const ManageOrders = () => {
   const { addToast } = useContext(ToastContext);
   const [orders, setOrders] = useState([]);
 
-  const load = () => getAllOrders().then((r) => setOrders(r.data)).catch(() => {});
+  const load = () => { getAllOrders().then((r) => setOrders(r.data)).catch(() => {}); };
   useEffect(load, []);
 
   const handleStatus = async (id, status) => {

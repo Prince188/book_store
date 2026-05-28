@@ -12,7 +12,7 @@ const ManageCoupons = () => {
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const load = () => getCoupons().then((r) => setCoupons(Array.isArray(r.data) ? r.data : [])).catch(() => setCoupons([]));
+  const load = () => { getCoupons().then((r) => setCoupons(Array.isArray(r.data) ? r.data : [])).catch(() => setCoupons([])); };
   useEffect(load, []);
 
   const handleSubmit = async (e) => {

@@ -9,7 +9,7 @@ const ManageTickets = () => {
   const [replyText, setReplyText] = useState({});
   const [expanded, setExpanded] = useState(null);
 
-  const load = () => getAllTickets().then((r) => setTickets(r.data)).catch(() => {});
+  const load = () => { getAllTickets().then((r) => setTickets(r.data)).catch(() => {}); };
   useEffect(load, []);
 
   const handleReply = async (id) => {

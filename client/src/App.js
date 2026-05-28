@@ -20,13 +20,13 @@ import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import Profile from './pages/Profile';
 import Contact from './pages/Contact';
-import Dashboard from './pages/admin/Dashboard';
-import ManageBooks from './pages/admin/ManageBooks';
-import ManageCategories from './pages/admin/ManageCategories';
-import ManageOrders from './pages/admin/ManageOrders';
-import ManageUsers from './pages/admin/ManageUsers';
-import ManageTickets from './pages/admin/ManageTickets';
-import ManageCoupons from './pages/admin/ManageCoupons';
+import Dashboard from './pages/Dashboard';
+import ManageBooks from './pages/ManageBooks';
+import ManageCategories from './pages/ManageCategories';
+import ManageOrders from './pages/ManageOrders';
+import ManageUsers from './pages/ManageUsers';
+import ManageTickets from './pages/ManageTickets';
+import ManageCoupons from './pages/ManageCoupons';
 
 const MainLayout = () => (
   <div className="flex flex-col min-h-screen">

@@ -10,7 +10,7 @@ import Seo from '../components/Seo';
 const BookDetail = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const { addToCart } = useContext(CartContext);
+  const { addItem } = useContext(CartContext);
   const { addToast } = useContext(ToastContext);
   const [book, setBook] = useState(null);
   const [qty, setQty] = useState(1);
@@ -20,7 +20,7 @@ const BookDetail = () => {
   if (!book) return null;
 
   const handleAdd = () => {
-    addToCart(book._id, qty);
+    addItem(book._id, qty);
     addToast('Added to cart');
   };
 
@@ -62,9 +62,9 @@ const BookDetail = () => {
                 {book.originalPrice && (
                   <span className="text-sm text-gray-400 line-through">&curren;{book.originalPrice.toLocaleString('en-IN')}</span>
                 )}
-                {book.stock != null && (
-                  <span className={`ml-auto text-xs font-medium ${book.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                    {book.stock > 0 ? `${book.stock} in stock` : 'Out of stock'}
+                {book.quantity != null && (
+                  <span className={`ml-auto text-xs font-medium ${book.quantity > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                    {book.quantity > 0 ? `${book.quantity} in stock` : 'Out of stock'}
                   </span>
                 )}
               </div>
@@ -77,13 +77,13 @@ const BookDetail = () => {
                 <p className="text-xs text-gray-400 mt-4">Publisher: {book.publisher}</p>
               )}
 
-              {book.stock > 0 && (
+              {book.quantity > 0 && (
                 <div className="flex items-center gap-4 mt-8">
                   <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                     <button onClick={() => setQty(Math.max(1, qty - 1))}
                       className="px-3 py-2 text-gray-500 hover:bg-gray-50 text-sm leading-none">&minus;</button>
                     <span className="px-4 py-2 text-sm font-medium text-gray-900 min-w-[2rem] text-center">{qty}</span>
-                    <button onClick={() => setQty(Math.min(book.stock, qty + 1))}
+                    <button onClick={() => setQty(Math.min(book.quantity, qty + 1))}
                       className="px-3 py-2 text-gray-500 hover:bg-gray-50 text-sm leading-none">+</button>
                   </div>
                   <button onClick={handleAdd}

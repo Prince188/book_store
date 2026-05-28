@@ -7,7 +7,7 @@ import { ToastContext } from '../context/ToastContext';
 import Seo from '../components/Seo';
 
 const Cart = () => {
-  const { cart, updateQty, removeFromCart, fetchCart } = useContext(CartContext);
+  const { cart, fetchCart, updateItem, removeItem } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const { addToast } = useContext(ToastContext);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Cart = () => {
   const [discount, setDiscount] = useState(0);
   const [checkingOut, setCheckingOut] = useState(false);
 
-  const subtotal = cart.reduce((sum, item) => sum + (item.book?.price || 0) * item.quantity, 0);
+  const subtotal = (cart?.items || []).reduce((sum, item) => sum + (item.book?.price || 0) * item.quantity, 0);
   const total = Math.max(0, subtotal - discount);
 
   const handleCoupon = async () => {
@@ -48,7 +48,7 @@ const Cart = () => {
     }
   };
 
-  if (cart.length === 0) {
+  if (!cart?.items || cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Seo title="Cart" />
@@ -69,7 +69,7 @@ const Cart = () => {
         <div className="grid lg:grid-cols-3 gap-10">
           {/* Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cart.map((item) => (
+            {cart.items.map((item) => (
               <div key={item._id} className="bg-white border border-gray-200 rounded-lg p-4 flex gap-4 shadow-sm">
                 {item.book?.image ? (
                   <img src={item.book.image} alt={item.book.title} className="w-20 h-28 object-cover rounded" />
@@ -86,13 +86,13 @@ const Cart = () => {
                   <p className="text-sm font-semibold text-indigo-600 mt-1">&curren;{item.book?.price?.toLocaleString('en-IN')}</p>
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center border border-gray-200 rounded overflow-hidden">
-                      <button onClick={() => updateQty(item.book?._id, Math.max(1, item.quantity - 1))}
+                      <button onClick={() => updateItem(item.book?._id, Math.max(1, item.quantity - 1))}
                         className="px-2.5 py-1.5 text-gray-500 hover:bg-gray-50 text-sm">&minus;</button>
                       <span className="px-3 py-1.5 text-sm font-medium text-gray-900">{item.quantity}</span>
-                      <button onClick={() => updateQty(item.book?._id, item.quantity + 1)}
+                      <button onClick={() => updateItem(item.book?._id, item.quantity + 1)}
                         className="px-2.5 py-1.5 text-gray-500 hover:bg-gray-50 text-sm">+</button>
                     </div>
-                    <button onClick={() => removeFromCart(item.book?._id)}
+                    <button onClick={() => removeItem(item.book?._id)}
                       className="text-xs text-red-500 hover:text-red-600 font-medium">
                       Remove
                     </button>

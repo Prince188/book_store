@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getBooks, getOrders, getUsers } from '../api';
+import { getBooks, getAllOrders, getAllUsers } from '../api';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell,
 } from 'recharts';
@@ -16,8 +16,8 @@ const Dashboard = () => {
   useEffect(() => {
     Promise.all([
       getBooks({ limit: 1 }),
-      getOrders(),
-      getUsers(),
+      getAllOrders(),
+      getAllUsers(),
     ]).then(([b, o, u]) => {
       const orders = o.data;
       const totalRevenue = orders.reduce((sum, ord) => sum + (ord.total || 0), 0);

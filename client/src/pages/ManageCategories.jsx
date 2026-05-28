@@ -9,7 +9,7 @@ const ManageCategories = () => {
   const [name, setName] = useState('');
   const [editing, setEditing] = useState(null);
 
-  const load = () => getCategories().then((r) => setCats(r.data)).catch(() => {});
+  const load = () => { getCategories().then((r) => setCats(r.data)).catch(() => {}); };
   useEffect(load, []);
 
   const handleSubmit = async (e) => {

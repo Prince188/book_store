@@ -3,7 +3,7 @@ import { getBooks, createBook, updateBook, deleteBook, getCategories, uploadImag
 import { ToastContext } from '../context/ToastContext';
 import Seo from '../components/Seo';
 
-const empty = { title: '', author: '', publisher: '', description: '', price: '', originalPrice: '', stock: '', categories: [], image: '' };
+const empty = { title: '', author: '', publisher: '', description: '', price: '', originalPrice: '', quantity: '', categories: [], image: '' };
 
 const ManageBooks = () => {
   const { addToast } = useContext(ToastContext);
@@ -26,7 +26,7 @@ const ManageBooks = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...form, price: Number(form.price), stock: Number(form.stock) };
+    const payload = { ...form, price: Number(form.price), quantity: Number(form.quantity) };
     if (form.originalPrice) payload.originalPrice = Number(form.originalPrice);
     else delete payload.originalPrice;
 
@@ -53,7 +53,7 @@ const ManageBooks = () => {
       description: book.description || '',
       price: book.price?.toString() || '',
       originalPrice: book.originalPrice?.toString() || '',
-      stock: book.stock?.toString() || '',
+      quantity: book.quantity?.toString() || '',
       categories: book.categories?.map((c) => c._id || c) || [],
       image: book.image || '',
     });
@@ -137,8 +137,8 @@ const ManageBooks = () => {
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
-                <input value={form.stock} onChange={(e) => /^\d*$/.test(e.target.value) && setForm({ ...form, stock: e.target.value })} required
+                <label className="block text-sm font-medium text-gray-700 mb-1">Quantity *</label>
+                <input value={form.quantity} onChange={(e) => /^\d*$/.test(e.target.value) && setForm({ ...form, quantity: e.target.value })} required
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
             </div>
@@ -190,7 +190,7 @@ const ManageBooks = () => {
                 <th className="text-left py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Title</th>
                 <th className="text-left py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Author</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Price</th>
-                <th className="text-right py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Stock</th>
+                <th className="text-right py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Qty</th>
                 <th className="text-right py-3 px-4 font-medium text-gray-400 text-xs uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -200,7 +200,7 @@ const ManageBooks = () => {
                   <td className="py-3 px-4 font-medium text-gray-900 max-w-[200px] truncate">{b.title}</td>
                   <td className="py-3 px-4 text-gray-600">{b.author}</td>
                   <td className="py-3 px-4 text-right font-semibold text-gray-900">&curren;{b.price?.toLocaleString('en-IN')}</td>
-                  <td className="py-3 px-4 text-right"><span className={`text-xs font-medium ${b.stock > 10 ? 'text-green-600' : b.stock > 0 ? 'text-yellow-600' : 'text-red-500'}`}>{b.stock}</span></td>
+                  <td className="py-3 px-4 text-right"><span className={`text-xs font-medium ${b.quantity > 10 ? 'text-green-600' : b.quantity > 0 ? 'text-yellow-600' : 'text-red-500'}`}>{b.quantity}</span></td>
                   <td className="py-3 px-4 text-right">
                     <button onClick={() => handleEdit(b)} className="text-indigo-600 hover:text-indigo-700 text-xs font-semibold mr-3">Edit</button>
                     <button onClick={() => handleDelete(b._id)} className="text-red-500 hover:text-red-600 text-xs font-semibold">Delete</button>
