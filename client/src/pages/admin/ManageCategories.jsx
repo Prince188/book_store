@@ -22,28 +22,28 @@ const ManageCategories = () => {
   return (
     <div className="p-8">
       <Seo title="Admin — Categories" />
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Categories</h1>
+      <h1 className="text-2xl font-serif text-[#2A2724] mb-8">Categories</h1>
 
-      <form onSubmit={handleAdd} className="bg-white rounded-xl border border-gray-200 p-6 mb-8 flex gap-4 items-end">
+      <form onSubmit={handleAdd} className="bg-white border border-[#EBE6DC] p-6 mb-8 flex gap-4 items-end">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} required className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <label className="block text-sm text-[#6B655D] mb-1">Name *</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} required className="w-full px-3 py-2 bg-[#FBFAF7] border border-[#D9D3C7] text-sm focus:outline-none focus:border-[#9C8B73]" />
         </div>
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <input value={desc} onChange={(e) => setDesc(e.target.value)} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          <label className="block text-sm text-[#6B655D] mb-1">Description</label>
+          <input value={desc} onChange={(e) => setDesc(e.target.value)} className="w-full px-3 py-2 bg-[#FBFAF7] border border-[#D9D3C7] text-sm focus:outline-none focus:border-[#9C8B73]" />
         </div>
-        <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-all">Add</button>
+        <button type="submit" className="px-4 py-2 bg-[#2A2724] text-white text-sm hover:bg-[#6B655D] transition-all">Add</button>
       </form>
 
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white border border-[#EBE6DC] overflow-hidden">
         {categories.map((cat) => (
-          <div key={cat._id} className="flex items-center justify-between px-5 py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
+          <div key={cat._id} className="flex items-center justify-between px-5 py-4 border-b border-[#EBE6DC] last:border-0 hover:bg-[#FBFAF7] transition-colors">
             <div>
-              <p className="font-medium text-gray-900">{cat.name}</p>
-              <p className="text-sm text-gray-500">{cat.description || '-'}</p>
+              <p className="text-[#2A2724]">{cat.name}</p>
+              <p className="text-sm text-[#6B655D]">{cat.description || '-'}</p>
             </div>
-            <button onClick={() => handleDelete(cat._id)} className="text-sm text-red-500 hover:text-red-600 font-medium transition-colors">Delete</button>
+            <button onClick={() => handleDelete(cat._id)} className="text-sm text-red-500 hover:text-red-600 transition-colors">Delete</button>
           </div>
         ))}
       </div>
