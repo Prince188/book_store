@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAllOrders, updateOrderStatus } from '../../api';
+import Seo from '../../components/Seo';
 
 
 const statuses = ['pending', 'shipped', 'delivered', 'cancelled'];
